@@ -1,7 +1,9 @@
 package com.carsonlius.interceptor;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.api.Assert;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.carsonlius.interceptor.entity.User;
 import com.carsonlius.interceptor.mapper.UserMapper;
 import org.junit.jupiter.api.Test;
@@ -12,6 +14,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.DoubleStream;
 
 @SpringBootTest
 class InterceptorApplicationTests {
@@ -93,4 +96,27 @@ class InterceptorApplicationTests {
         System.out.println("count:" + count);
     }
 
+
+    @Test
+    public void testSelectList(){
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.likeRight("name", "carsonlius");
+        List<User> userList = userMapper.selectList(wrapper);
+        System.out.println(userList);
+    }
+
+    @Test
+    public void testSelectPage()
+    {
+        Page<User> page = new Page<>(10, 2);
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.ge("id", 1);
+        IPage<User> iPage = userMapper.selectPage(page, userQueryWrapper);
+        System.out.println("total results:" + iPage.getTotal());
+        System.out.println("total page:" + iPage.getPages());
+        System.out.println("current page:" + iPage.getCurrent());
+        List<User> userList= iPage.getRecords();
+        System.out.println(userList);
+
+    }
 }
