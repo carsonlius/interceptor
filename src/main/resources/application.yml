@@ -1,6 +1,18 @@
 spring:
         datasource:
                 driver-class-name: com.mysql.cj.jdbc.Driver
-                url: jdbc:mysql://127.0.0.1:3307/gulimall_admin?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+                url: jdbc:mysql://vagrant:3307/gulimall_admin?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
                 username: root
                 password: root
+mybatis-plus:
+        mapper-locations: classpath*:mybatis/*.xml
+        type-aliases-package: com.carsonlius.interceptor.entity
+        configuration:
+                # 开启驼峰转换 默认true
+                map-underscore-to-camel-case: true
+                # 开始mybatis二次缓存 默认true
+                cache-enabled: true
+        global-config:
+                db-config:
+                        # 数据库id自增
+                        id-type: auto

@@ -10,7 +10,11 @@ public class User {
     private Long id;
 
     private String name;
+
+    @TableField(select = false)
     private Integer age;
 
     private String email;
+
+    private String userRemark;
 }

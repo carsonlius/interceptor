@@ -22,21 +22,28 @@ class InterceptorApplicationTests {
     @Autowired
     private UserMapper userMapper;
 
+
+    @Test
+    public void testFindById() {
+        User user = userMapper.findById(1L);
+        System.out.println(user);
+    }
+
     @Test
     void contextLoads() {
     }
 
 
     @Test
-    public void testSelect(){
+    public void testSelect() {
         List<User> userList = userMapper.selectList(null);
         userList.stream().forEach(System.out::println);
 
-        Assert.isTrue(5 == userList.stream().count(),null );
+        Assert.isTrue(5 == userList.stream().count(), null);
     }
 
     @Test
-    public void testDeleteByMap(){
+    public void testDeleteByMap() {
         Map<String, Object> map = new HashMap<>();
         map.put("name", "Tom");
         map.put("age", 28);
@@ -45,7 +52,7 @@ class InterceptorApplicationTests {
     }
 
     @Test
-    public void testDelete(){
+    public void testDelete() {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         List<Long> list = new LinkedList<>();
 //        list.add(5L);
@@ -56,15 +63,15 @@ class InterceptorApplicationTests {
 //        User user = new User();
 //        user.setAge(28);
 //        queryWrapper.setEntity(user);
-        queryWrapper.eq("id",1L).or(true,
-                i -> i.ge("age", 23).in("name","BIllie"));
+        queryWrapper.eq("id", 1L).or(true,
+                i -> i.ge("age", 23).in("name", "BIllie"));
 
         int result = userMapper.delete(queryWrapper);
         System.out.println("in result:" + result);
     }
 
     @Test
-    public void testDeleteBatchIds(){
+    public void testDeleteBatchIds() {
         List<Long> list = new LinkedList<>();
         list.add(5L);
         list.add(2L);
@@ -74,22 +81,22 @@ class InterceptorApplicationTests {
     }
 
     @Test
-    public void testSelectById(){
+    public void testSelectById() {
         User user = userMapper.selectById(33L);
-        System.out.println("selectById "+ user);
+        System.out.println("selectById " + user);
     }
 
     @Test
-    public void testSelectOne(){
+    public void testSelectOne() {
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
-        userQueryWrapper.ge("id", 1);
+        userQueryWrapper.eq("id", 1);
         User user = userMapper.selectOne(userQueryWrapper);
 
         System.out.println("user " + user);
     }
 
     @Test
-    public void testSelectCount(){
+    public void testSelectCount() {
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.ge("id", 1);
         int count = userMapper.selectCount(userQueryWrapper);
@@ -98,25 +105,67 @@ class InterceptorApplicationTests {
 
 
     @Test
-    public void testSelectList(){
+    public void testSelectList() {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.likeRight("name", "carsonlius");
+        wrapper.select("name,age,email").
+                likeLeft("name", "carsonlius");
         List<User> userList = userMapper.selectList(wrapper);
         System.out.println(userList);
     }
 
     @Test
-    public void testSelectPage()
-    {
-        Page<User> page = new Page<>(10, 2);
+    public void testSelectPage() {
+        Page<User> page = new Page<>(1, 2);
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.ge("id", 1);
+        userQueryWrapper.orderByDesc("id");
+
         IPage<User> iPage = userMapper.selectPage(page, userQueryWrapper);
         System.out.println("total results:" + iPage.getTotal());
         System.out.println("total page:" + iPage.getPages());
         System.out.println("current page:" + iPage.getCurrent());
-        List<User> userList= iPage.getRecords();
+        List<User> userList = iPage.getRecords();
         System.out.println(userList);
-
     }
+
+    @Test
+    public void testInsert() {
+        User user = new User();
+        user.setName("刘森2");
+        user.setAge(29);
+        int result = userMapper.insert(user);
+        System.out.println("insert result:" + result);
+        System.out.println("id :" + user.getId());
+    }
+
+    @Test
+    public void testAllEq() {
+        Map<String, Object> where = new HashMap<>();
+        where.put("name", "carsonlius");
+        where.put("age", 29);
+        where.put("email", null);
+
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.allEq(where, false);
+        queryWrapper.allEq((x,y)->true, where);
+//        queryWrapper.allEq((x,y)-> y!=null, where);
+
+
+
+        List<User> userList = userMapper.selectList(queryWrapper);
+        System.out.println(userList);
+    }
+
+
+    @Test
+    public void testDeleteAll(){
+//        int result = userMapper.delete(null);
+        User user = new User();
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.ge("id", 1);
+        user.setName("test delete2");
+       int result =  userMapper.update(user, null);
+        System.out.println("delete all result:"+ result);
+    }
+
 }
