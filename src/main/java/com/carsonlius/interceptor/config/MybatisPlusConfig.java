@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.plugins.SqlExplainInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.IllegalSQLInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import com.carsonlius.interceptor.injectors.MySqlInjector;
 import org.mybatis.spring.annotation.MapperScan;
 //import org.springframework.context.annotation.Bean;
 import org.springframework.aop.interceptor.PerformanceMonitorInterceptor;
@@ -34,12 +35,20 @@ public class MybatisPlusConfig {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.H2));
         interceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());
-        interceptor.addInnerInterceptor(new IllegalSQLInnerInterceptor());
+//        interceptor.addInnerInterceptor(new IllegalSQLInnerInterceptor());
         return interceptor;
     }
 
     @Bean
     public ConfigurationCustomizer configurationCustomizer() {
         return configuration -> configuration.setUseDeprecatedExecutor(false);
+    }
+
+    /**
+     * 自定义的sql注入器
+     * */
+    @Bean
+    public MySqlInjector mySqlInjector(){
+        return new MySqlInjector();
     }
 }

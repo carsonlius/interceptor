@@ -168,4 +168,9 @@ class InterceptorApplicationTests {
         System.out.println("delete all result:"+ result);
     }
 
+    @Test
+    public void testFindAll(){
+        List<User> list = userMapper.findAll();
+        System.out.println(list);
+    }
 }
