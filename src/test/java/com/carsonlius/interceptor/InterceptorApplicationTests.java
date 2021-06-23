@@ -169,8 +169,14 @@ class InterceptorApplicationTests {
     }
 
     @Test
-    public void testFindAll(){
-        List<User> list = userMapper.findAll();
-        System.out.println(list);
+    public void testUpdateById(){
+        User user = userMapper.selectById(1L);
+        User userUpdate = new User();
+        userUpdate.setId(user.getId());
+        userUpdate.setName("liusen3");
+        userUpdate.setVersion(3);
+
+        int result = userMapper.updateById(userUpdate);
+        System.out.println("version updateById result:" + result);
     }
 }

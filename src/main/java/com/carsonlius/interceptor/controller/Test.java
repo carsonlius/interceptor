@@ -1,5 +1,6 @@
 package com.carsonlius.interceptor.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.carsonlius.interceptor.entity.User;
 import com.carsonlius.interceptor.mapper.UserMapper;
 import com.carsonlius.interceptor.service.Consume;
@@ -40,8 +41,10 @@ public class Test {
     @GetMapping("/test")
     public Object test(){
         System.out.println("-- select all methods test --");
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.ge("id", 1);
 
-        List<User> userList = userMapper.selectList(null);
+        List<User> userList = userMapper.selectList(queryWrapper);
         userList.stream().forEach(System.out::println);
         return userList;
     }
